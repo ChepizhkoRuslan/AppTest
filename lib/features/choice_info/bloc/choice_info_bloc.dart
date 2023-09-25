@@ -1,3 +1,4 @@
+import 'package:app_test/features/choice_info/repo/choice_info_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,9 +6,8 @@ part 'choice_info_event.dart';
 part 'choice_info_state.dart';
 
 class ChoiceInfoBloc extends Bloc<ChoiceInfoEvent, ChoiceInfoState> {
-  ChoiceInfoBloc() : super(ChoiceInfoInitial()) {
-    DateTime? trackPeriod;
-    DateTime? trackPregnant;
+  final ChoiceInfoCashRepository repository;
+  ChoiceInfoBloc(this.repository) : super(ChoiceInfoInitial()) {
 
     on<PeriodChoiceInfoEvent>((event, emit) {
       emit(PeriodChoiceInfoState());
@@ -18,14 +18,18 @@ class ChoiceInfoBloc extends Bloc<ChoiceInfoEvent, ChoiceInfoState> {
     });
 
     on<SendResultChoiceInfoEvent>((event, emit) {
-      event.trackPeriod != null ? trackPeriod = event.trackPeriod : null;
-      event.trackPregnant != null ? trackPregnant = event.trackPregnant : null;
+      event.trackPeriod != null
+          ? repository.trackPeriod = event.trackPeriod
+          : null;
+      event.trackPregnant != null
+          ? repository.trackPregnant = event.trackPregnant
+          : null;
     });
 
     on<GetResultChoiceInfoEvent>((event, emit) {
       emit(ResultChoiceInfoState(
-        trackPeriod: trackPeriod,
-        trackPregnant: trackPregnant,
+        trackPeriod: repository.trackPeriod,
+        trackPregnant: repository.trackPregnant,
       ));
     });
   }
